@@ -8,16 +8,16 @@ import { CreateCarDto, UpdateCarDto } from './dto';
 export class CarsService {
   constructor(
     @InjectRepository(Car)
-    private carsRepository: Repository<Car>,
+    private _carsRepository: Repository<Car>,
   ) {}
 
   async create(createCarDto: CreateCarDto): Promise<Car> {
-    const car = this.carsRepository.create(createCarDto);
-    return this.carsRepository.save(car);
+    const car = this._carsRepository.create(createCarDto);
+    return this._carsRepository.save(car);
   }
 
   async findById(id: string): Promise<Car> {
-    const car = await this.carsRepository.findOne({ where: { id } });
+    const car = await this._carsRepository.findOne({ where: { id } });
     if (!car) {
       throw new NotFoundException(`La voiture avec ID "${id}" n'existe pas`);
     }
@@ -25,7 +25,7 @@ export class CarsService {
   }
 
   async findByBrand(brand: string): Promise<Car[]> {
-    return this.carsRepository.find({ where: { brand } });
+    return this._carsRepository.find({ where: { brand } });
   }
 
   async update(id: string, updateCarDto: UpdateCarDto): Promise<Car> {
@@ -33,11 +33,11 @@ export class CarsService {
 
     Object.assign(car, updateCarDto);
 
-    return this.carsRepository.save(car);
+    return this._carsRepository.save(car);
   }
 
   async delete(id: string): Promise<void> {
-    const result = await this.carsRepository.delete(id);
+    const result = await this._carsRepository.delete(id);
     if (result.affected === 0) {
       throw new NotFoundException(`La voiture avec ID "${id}" n'existe pas`);
     }
